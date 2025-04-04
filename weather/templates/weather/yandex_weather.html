@@ -1,0 +1,53 @@
+<!-- weather/yandex_weather.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Прогноз погоды для всех городов</h1>
+
+    <div class="row">
+        {% for data in weather_data %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h3>{{ data.location.name }}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h2 class="display-4">{{ data.weather.temp }}°C</h2>
+                            <p>Ощущается как: {{ data.weather.feels_like }}°C</p>
+                        </div>
+                        <div class="text-right">
+                            {% if data.weather.condition == "clear" %}
+                                <i class="fas fa-sun fa-4x text-warning"></i>
+                            {% elif data.weather.condition == "rain" %}
+                                <i class="fas fa-cloud-rain fa-4x text-info"></i>
+                            {% else %}
+                                <i class="fas fa-cloud fa-4x text-secondary"></i>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row text-center">
+                        <div class="col">
+                            <i class="fas fa-wind"></i> {{ data.weather.wind_speed }} м/с
+                        </div>
+                        <div class="col">
+                            <i class="fas fa-tint"></i> {{ data.weather.humidity }}%
+                        </div>
+                        <div class="col">
+                            <i class="fas fa-tachometer-alt"></i> {{ data.weather.pressure }} мм рт.ст.
+                        </div>
+                    </div>
+                    <div class="mt-2 text-muted text-right">
+                        <small>Обновлено: {{ data.weather.timestamp|date:"H:i" }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

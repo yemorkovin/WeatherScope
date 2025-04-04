@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1>Погода в {{ location.name }}</h1>
+
+    <!-- Текущая погода -->
+    <div class="card current-weather">
+        <div class="card-body">
+            <h2>Сейчас: {{ current.temp|floatformat:0 }}°C</h2>
+            <p>Влажность: {{ current.humidity }}%</p>
+            <p>Ветер: {{ current.wind_speed }} м/с</p>
+        </div>
+    </div>
+
+    <!-- График температуры (Chart.js) -->
+    <canvas id="temperatureChart" width="400" height="200"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('temperatureChart');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {% autoescape off %}{{ hourly|map_attr:'dt'|date:"H:i" }}{% endautoescape %},
+            datasets: [{
+                label: 'Температура (°C)',
+                data: {{ hourly|map_attr:'temp' }},
+            }]
+        }
+    });
+</script>
+{% endblock %}
